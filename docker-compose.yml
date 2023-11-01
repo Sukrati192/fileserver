@@ -1,0 +1,18 @@
+version: "3.3"
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    image: fileserver:latest
+    container_name: fileserver
+    volumes:
+      - ./configmanager/configs/config.json:/fileserver/configmanager/configs/config.json
+    depends_on:
+      - ipfs
+  ipfs:
+    image: ipfs/kubo
+    ports:
+      - '8080:8080'
+      - '5001:5001'
+

@@ -1,0 +1,74 @@
+basePath: /
+definitions:
+  contracts.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  contracts.File:
+    properties:
+      fileID:
+        type: string
+      size:
+        type: string
+      timestamp:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: A Service that facilitates file upload and download using IPFS
+  title: FileServer
+  version: "1.0"
+paths:
+  /file/{fileID}:
+    get:
+      description: Checks if a file exists in IPFS storage with given id, then stream
+        the file
+      parameters:
+      - description: ID of the file
+        in: path
+        name: fileID
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/contracts.ErrorResponse'
+      summary: API to get the uploaded file
+      tags:
+      - public
+  /upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Uploads the file in IPFS storage and returns id, size and timestamp
+        in response
+      parameters:
+      - description: File to be uploaded
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/contracts.File'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/contracts.ErrorResponse'
+      summary: API to upload a file
+      tags:
+      - public
+swagger: "2.0"
